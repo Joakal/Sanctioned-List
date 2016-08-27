@@ -2,9 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use DB;
-
 use App\Http\Controllers\Controller;
+use App\Repositories\SearchRepository;
 
 class SearchController extends Controller
 {
@@ -16,12 +15,28 @@ class SearchController extends Controller
     | This displays the Search page
     |
     */
+    /**
+     * The search repository implementation.
+     *
+     * @var SearchRepository
+     */
+    protected $searchRepo;
 
-    public function showPage($query = null)
+    /**
+     * Create a new controller instance.
+     *
+     * @param  SearchRepository  $searchRepo
+     * @return void
+     */
+    public function __construct(SearchRepository $searchRepo)
     {
-        $ofac = DB::table('ofac')->get();
+        $this->searchRepo = $searchRepo;
+    }
 
-        return view('search', ['ofac' => $ofac]);
+    public function showIndex($query = null)
+    {
+
+		return $this->searchRepo->all();
     }
 	
 }

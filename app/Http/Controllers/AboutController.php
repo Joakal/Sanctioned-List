@@ -13,7 +13,7 @@ class AboutController extends Controller
     |
     */
 
-    public function showPage()
+    public function showIndex()
     {
         return view('about');
     }

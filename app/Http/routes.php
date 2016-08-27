@@ -16,8 +16,8 @@ Route::get('/', function () {
 });
 
 Route::get('about', [
-    'as' => 'about', 'uses' => 'AboutController@showPage'
+    'as' => 'about', 'uses' => 'AboutController@showIndex'
 ]);
 
-Route::get('search/{query?}', 'SearchController@showPage');
+Route::get('search/{query?}', 'SearchController@showIndex')->name('search.index');
 

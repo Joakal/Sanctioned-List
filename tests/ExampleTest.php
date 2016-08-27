@@ -16,4 +16,12 @@ class ExampleTest extends TestCase
         $this->visit('/')
              ->see('Laravel 5');
     }
+
+	public function testSearchRepositoryIsCalledToGetAllSearches()
+	{
+		// This is one way Laravel calls routes that are
+		// registered to the application.
+		$this->get('/search');
+	}
 }
+
