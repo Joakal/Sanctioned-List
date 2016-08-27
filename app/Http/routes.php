@@ -14,3 +14,10 @@
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('about', [
+    'as' => 'about', 'uses' => 'AboutController@showPage'
+]);
+
+Route::get('search/{query?}', 'SearchController@showPage');
+
