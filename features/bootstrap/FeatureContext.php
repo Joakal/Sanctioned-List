@@ -24,6 +24,7 @@ class FeatureContext extends Behat\MinkExtension\Context\MinkContext implements 
     {
     }
 
+
     /**
      * @Given the method :arg1 receives the numbers :arg2 and :arg3
      */

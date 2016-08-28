@@ -4,6 +4,6 @@ We want to test the search page for a phrase
 
 Scenario: Search Page Test
 When I am on "search"
-Then I should see "Search database"
+Then I should see "Database Query"
 
 

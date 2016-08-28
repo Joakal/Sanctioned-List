@@ -13,10 +13,9 @@ class SearchSpec extends ObjectBehavior
         $this->shouldHaveType(Search::class);
     }
 
-	public function it_should_sum()
+	public function it_should_search()
 	{
-		$this->sum(4, 7);
-		$this->result()->shouldBe(11);
+		$this->find("John")->shouldBe(11);
 	}
 
 }

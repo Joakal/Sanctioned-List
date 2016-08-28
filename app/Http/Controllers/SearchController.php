@@ -35,8 +35,10 @@ class SearchController extends Controller
 
     public function showIndex($query = null)
     {
+		// Send request to db		
+		$results = FALSE;
 
-		return $this->searchRepo->all();
+        return view('search', ['results' => $results, 'query' => $query]);
     }
 	
 }

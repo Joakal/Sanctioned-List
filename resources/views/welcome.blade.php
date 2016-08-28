@@ -1,45 +1,41 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>Laravel</title>
+@extends('app')
 
-        <link href="https://fonts.googleapis.com/css?family=Lato:100" rel="stylesheet" type="text/css">
+@section('title', 'Sanction Search')
 
-        <style>
-            html, body {
-                height: 100%;
-            }
 
-            body {
-                margin: 0;
-                padding: 0;
-                width: 100%;
-                display: table;
-                font-weight: 100;
-                font-family: 'Lato';
-            }
+@section('content')
+<div class="row">
+<div class="large-12 columns">
+<h1>Sanction Search</h1>
+<hr/>
+</div>
+</div>
+ 
+ 
+<div class="row">
+ 
+<div class="large-9 columns" role="content">
+<article>
+@include('query')
 
-            .container {
-                text-align: center;
-                display: table-cell;
-                vertical-align: middle;
-            }
+<div class="row">
+<div class="large-12 columns">
+<h4>Search OFAC database with ease.</h4>
+<p>The website makes searching easy for anyone. Complex algorithims are performed based on a single query against the OFAC database that give you results most closely matching your query.</p>
+<hr>
+<h4>Office of Foreign Assets Control (OFAC)</h4>
+<p>The Office of Foreign Assets Control (OFAC) of the US Department of the Treasury administers and enforces economic and trade sanctions based on US foreign policy and national security goals against targeted foreign countries and regimes, terrorists, international narcotics traffickers, those engaged in activities related to the proliferation of weapons of mass destruction, and other threats to the national security, foreign policy or economy of the United States. OFAC maintains a listing of these restricted counter parties in a document called the "Specially Designated Nationals List" (SDN) that is retrieved and loaded onto this website at least daily.</p>
+</div>
+</div>
 
-            .content {
-                text-align: center;
-                display: inline-block;
-            }
+</article>
+</div>
+@endsection
 
-            .title {
-                font-size: 96px;
-            }
-        </style>
-    </head>
-    <body>
-        <div class="container">
-            <div class="content">
-                <div class="title">Laravel 5</div>
-            </div>
-        </div>
-    </body>
-</html>
+@section('sidebar')
+    @parent
+
+    <aside class="large-3 columns">
+	Ad placeholder
+	</aside>
+@endsection
