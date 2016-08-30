@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Repositories\SearchRepository;
+use Request;
 
 class SearchController extends Controller
 {
@@ -33,10 +34,15 @@ class SearchController extends Controller
         $this->searchRepo = $searchRepo;
     }
 
-    public function showIndex($query = null)
+    public function showIndex()
     {
+		$query = Request::input('search');
+
 		// Send request to db		
-		$results = FALSE;
+		$results = $this->searchRepo->bulk_insert();
+		
+		// Send request to db		
+		$results = $this->searchRepo->find($query);
 
         return view('search', ['results' => $results, 'query' => $query]);
     }

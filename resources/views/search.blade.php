@@ -18,14 +18,12 @@
 <article>
 @include('query')
 
-@if(!empty($results)):
-	Searched for $query
+	Searched for {{$query}}!
 	@forelse ($results as $result)
 		<li>{{ $result->name }}</li>
 	@empty
 		<p>No results</p>
 	@endforelse
-@endif
 
 </article>
 </div>

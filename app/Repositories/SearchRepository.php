@@ -6,9 +6,30 @@ interface SearchRepository
 {
 
    /**
-    * Gets all the users in the system.
+    * Gets all the records in the system.
     *
     * @return \Illuminate\Database\Eloquent\Collection|null
     */
    public function all();
+
+   /**
+    * Finds a list of results that matches the word among all tables in the system.
+    *
+    * @return \Illuminate\Database\Eloquent\Collection|null
+    */
+   public function find($query);
+
+   /**
+    * Finds a list of results that closely matches the word among all tables in the system.
+    *
+    * @return \Illuminate\Database\Eloquent\Collection|null
+    */
+   public function fuzzy_find($query);
+
+   /**
+    * A big script to read a XML, parse it then insert to DB
+    *
+    * @return \Illuminate\Database\Eloquent\Collection|null
+    */
+   public function bulk_insert();
 }

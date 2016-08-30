@@ -4,5 +4,5 @@ default:
             # env_path: .env
         Behat\MinkExtension:
             default_session: laravel
-            base_url: http://localhost:8888
+            base_url: http://sanctions.demo.localflynn.com/
             laravel: ~
