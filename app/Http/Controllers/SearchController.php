@@ -39,7 +39,7 @@ class SearchController extends Controller
 		$query = Request::input('search');
 
 		// Send request to db		
-		$results = $this->searchRepo->bulk_insert();
+		//$results = $this->searchRepo->bulk_insert();
 		
 		// Send request to db		
 		$results = $this->searchRepo->find($query);

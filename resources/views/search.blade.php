@@ -17,10 +17,10 @@
 <div class="large-9 columns" role="content">
 <article>
 @include('query')
-
-	Searched for {{$query}}!
+<?php die(var_dump($results)); ?>
+	Searched for {{$query}}
 	@forelse ($results as $result)
-		<li>{{ $result->name }}</li>
+		<li>{{ $result }}</li>
 	@empty
 		<p>No results</p>
 	@endforelse
