@@ -10,9 +10,7 @@
  
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/foundation/5.5.3/css/normalize.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/foundation/5.5.3/css/foundation.min.css">
-<link href='http://cdnjs.cloudflare.com/ajax/libs/foundicons/3.0.0/foundation-icons.css' rel='stylesheet' type='text/css'>
- 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js"></script>
+<link href='css/app.css' rel='stylesheet' type='text/css'>
 </head>
 <body>
  
@@ -29,15 +27,10 @@
 <hr/>
 <div class="row">
 <div class="large-12 columns">
-<p>Sanction Search</p>
+<p><a href="/">Sanction Search</a></p>
 </div>
 </div>
 </div>
 </footer>
-<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/foundation/5.5.3/js/foundation.min.js"></script>
-<script>
-    $(document).foundation();
-  </script>
 </body>
 </html>

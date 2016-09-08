@@ -28,7 +28,87 @@ class SearchEloquentRepository implements SearchRepository
    public function fuzzy_find($query)
     {
 
-        return DB::table('sdnEntry')->where('firstName',$query);
+		DB::enableQueryLog();
+
+		$lastname = DB::table('sdnEntry')
+			->select('*', DB::raw('similarity("lastName", ?) As sim_score'))
+            ->where('lastName', '<>', $query)
+            ->whereRaw('"lastName" % ?', [ $query,$query]);
+
+		$title = DB::table('sdnEntry')
+			->select('*', DB::raw('similarity("title", ?) As sim_score'))
+            ->where('title', '<>', $query)
+            ->whereRaw('"title" % ?', [$query,$query]);
+
+		$sdnType = DB::table('sdnEntry')
+			->select('*', DB::raw('similarity("sdnType", ?) As sim_score'))
+            ->where('sdnType', '<>', $query)
+            ->whereRaw('"sdnType" % ?', [$query,$query]);
+
+		$remarks = DB::table('sdnEntry')
+			->select('*', DB::raw('similarity("remarks", ?) As sim_score'))
+            ->where('remarks', '<>', $query)
+            ->whereRaw('"remarks" % ?', [$query,$query]);
+
+		/* We don't really need to search programList
+		$programList = DB::table('sdnEntry')
+			->select('*', DB::raw('similarity("programList", ?) As sim_score'))
+            ->where('programList', '<>', $query)
+            ->whereRaw('"programList" % ?', [$query,$query]); */
+
+		$idList = DB::table('sdnEntry')
+			->select('*', DB::raw('similarity("idList", ?) As sim_score'))
+            ->where('idList', '<>', $query)
+            ->whereRaw('"idList" % ?', [$query,$query]);
+
+		$akaList = DB::table('sdnEntry')
+			->select('*', DB::raw('similarity("akaList", ?) As sim_score'))
+            ->where('akaList', '<>', $query)
+            ->whereRaw('"akaList" % ?', [$query,$query]);
+
+		/* We don't really need to search addresses
+		$addressList = DB::table('sdnEntry')
+			->select('*', DB::raw('similarity("addressList", ?) As sim_score'))
+            ->where('addressList', '<>', $query)
+            ->whereRaw('"addressList" % ?', [$query,$query]); */
+
+		/* We don't really need to search nationality
+		$nationalityList = DB::table('sdnEntry')
+			->select('*', DB::raw('similarity("nationalityList", ?) As sim_score'))
+            ->where('nationalityList', '<>', $query)
+            ->whereRaw('"nationalityList" % ?', [$query,$query]);*/
+
+		/* We don't really need to search citizenship
+		$citizenshipList = DB::table('sdnEntry')
+			->select('*', DB::raw('similarity("citizenshipList", ?) As sim_score'))
+            ->where('citizenshipList', '<>', $query)
+            ->whereRaw('"citizenshipList" % ?', [$query,$query]);*/
+
+		$vesselInfo = DB::table('sdnEntry')
+			->select('*', DB::raw('similarity("vesselInfo", ?) As sim_score'))
+            ->where('vesselInfo', '<>', $query)
+            ->whereRaw('"vesselInfo" % ?', [$query,$query]);
+
+		$firstname = DB::table('sdnEntry')
+			->select('*', DB::raw('similarity("firstName", ?) As sim_score'))
+            ->where('firstName', '<>', $query)
+            ->whereRaw('"firstName" % ?', [$query,$query])
+			->union($lastname)
+			->union($title)
+			->union($sdnType)
+			->union($remarks)
+			//->union($programList)
+			->union($idList)
+			->union($akaList)
+			//->union($addressList)
+			//->union($nationalityList)
+			//->union($citizenshipList)
+			->union($vesselInfo)
+	 		->orderBy('sim_score', 'desc')
+			->limit(15)
+			->get();
+
+        return $firstname;
     }
 
 
@@ -69,30 +149,13 @@ class SearchEloquentRepository implements SearchRepository
 			foreach ($xml->sdnEntry as $value)
 			{
 
-				$cloned_value = clone $value;
-
-				// We will put these in a separate table
-				unset($cloned_value->programList);
-				unset($cloned_value->idList);
-				unset($cloned_value->akaList);
-				unset($cloned_value->addressList);
-				unset($cloned_value->nationalityList);
-				unset($cloned_value->citizenshipList);
-				unset($cloned_value->dateOfBirthList);
-				unset($cloned_value->placeOfBirthList);
-				unset($cloned_value->vesselInfo);
-
-				// Convert it into an array for Laravel
-				$cloned_array = (array) $cloned_value;
-				// For the sdnEntry table
-				DB::table('sdnEntry')->insert(
-					$cloned_array
-				);
 
 				// We generate an array based on SDN record
 				// And for each record, we're attaching a foreign reference to primary SDN record
+				$programList = array();
 				if($value->programList)
 				{
+
 					foreach ($value->programList as $programRecord)
 					{
 						$programRecord->sdnuid = $value->uid;
@@ -107,117 +170,124 @@ class SearchEloquentRepository implements SearchRepository
 								$programLine = $arrayRecord;
 								$programLine['program'] = $program;
 
-								DB::table('programList')->insert(
-									(array) $programLine // Into an array for L5
-								);
+								array_push($programList, implode(" ",(array) $programLine)); // Into an array for L5
 							}
 
 						}else{
-							DB::table('programList')->insert(
-								(array) $programRecord // Into an array for L5
-							);
+							$programList = (array) $programRecord; // Into an array for L5
 						}
 					}
 				}
 
+				$idList = array();
 				if($value->idList->id)
 				{
 					foreach ($value->idList->id as $idRecord)
-					{
-						$idRecord->sdnuid = $value->uid;
-				
-						DB::table('idList')->insert(
-							(array) $idRecord // Into an array for L5
-						);
+					{	
+						unset($idRecord->uid);
+						array_push($idList, " ID: ".implode(" ",(array) $idRecord));
 					}
 				}
 
 
+				$akaList = array();
 				if($value->akaList->aka)
 				{
 					foreach ($value->akaList->aka as $akaRecord)
 					{
-						$akaRecord->sdnuid = $value->uid;
+						unset($akaRecord->uid);
+						unset($akaRecord->category);
+						unset($akaRecord->type);
+						array_push($akaList, " AKA: ".implode(" ",(array) $akaRecord));
 				
-						DB::table('akaList')->insert(
-							(array) $akaRecord // Into an array for L5
-						);
 					}
 				}
 
+				$addressList = array();
 				if($value->addressList->address)
 				{
 					foreach ($value->addressList->address as $addressRecord)
 					{
-						$addressRecord->sdnuid = $value->uid;
-				
-						DB::table('addressList')->insert(
-							(array) $addressRecord // Into an array for L5
-						);
+						unset($addressRecord->uid);
+						array_push($addressList, " Address: ".implode(" ",(array) $addressRecord));
 					}
 				}
 
+				$nationalityList = array();
 				if($value->nationalityList->nationality)
 				{
 					foreach ($value->nationalityList->nationality as $nationalityRecord)
 					{
-						$nationalityRecord->sdnuid = $value->uid;
-				
-						DB::table('nationalityList')->insert(
-							(array) $nationalityRecord // Into an array for L5
-						);
+						unset($nationalityRecord->uid);
+						unset($nationalityRecord->mainEntry);
+						array_push($nationalityList, " Nationality: ".implode(" ",(array) $nationalityRecord));
 					}
 				}
 
+				$citizenshipList = array();
 				if($value->citizenshipList->citizenship)
 				{
 					foreach ($value->citizenshipList->citizenship as $citizenshipRecord)
 					{
-						$citizenshipRecord->sdnuid = $value->uid;
-				
-						DB::table('citizenshipList')->insert(
-							(array) $citizenshipRecord // Into an array for L5
-						);
+						unset($citizenshipRecord->uid);
+						unset($citizenshipRecord->mainEntry);
+						array_push($citizenshipList, " Citizenship: ".implode(" ",(array) $citizenshipRecord));
 					}
 				}
 
+				$dateOfBirthList = array();
 				if($value->dateOfBirthList->dateOfBirthItem)
 				{
 					foreach ($value->dateOfBirthList->dateOfBirthItem as $dateOfBirthRecord)
 					{
-						$dateOfBirthRecord->sdnuid = $value->uid;
-				
-						DB::table('dateOfBirthList')->insert(
-							(array) $dateOfBirthRecord // Into an array for L5
-						);
+						unset($dateOfBirthRecord->uid);
+						unset($dateOfBirthRecord->mainEntry);
+						array_push($dateOfBirthList, " DOB: ".implode(" ",(array) $dateOfBirthRecord));
 					}
 				}
 
+				$placeOfBirthList = array();
 				if($value->placeOfBirthList->placeOfBirthItem)
 				{
 					foreach ($value->placeOfBirthList->placeOfBirthItem as $placeOfBirthRecord)
 					{
-						$placeOfBirthRecord->sdnuid = $value->uid;
-				
-						DB::table('placeOfBirthList')->insert(
-							(array) $placeOfBirthRecord // Into an array for L5
-						);
+						unset($placeOfBirthRecord->uid);
+						unset($placeOfBirthRecord->mainEntry);
+						array_push($placeOfBirthList, " POB: ".implode(" ",(array) $placeOfBirthRecord));
 					}
 				}
 
+				$vesselInfo = array();
 				if($value->vesselInfo)
 				{
 					foreach ($value->vesselInfo as $vesselRecord)
 					{
-						$vesselRecord->sdnuid = $value->uid;
-				
-						DB::table('vesselInfo')->insert(
-							(array) $vesselRecord // Into an array for L5
-						);
+						array_push($vesselInfo, " Vessel Info: ".implode(" ",(array) $vesselRecord));
 					}
 				}
 
-		
+				$cloned_value = clone $value;
+
+				// We will update the values
+				$cloned_array = (array) $cloned_value;
+				
+				$cloned_array['programList'] = implode(" ",$programList);
+				$cloned_array['idList'] = implode(" ",$idList);
+				$cloned_array['akaList'] = implode(" ",$akaList);
+				$cloned_array['addressList'] = implode(" ",$addressList);
+				$cloned_array['nationalityList'] = implode(" ",$nationalityList);
+				$cloned_array['citizenshipList'] = implode(" ",$citizenshipList);
+				$cloned_array['dateOfBirthList'] = implode(" ",$dateOfBirthList);
+				$cloned_array['placeOfBirthList'] = implode(" ",$placeOfBirthList);
+				$cloned_array['vesselInfo'] = implode(" ",$vesselInfo);
+
+				// Convert it into an array for Laravel
+				// For the sdnEntry table
+				DB::table('sdnEntry')->insert(
+					$cloned_array
+				);
+
+				
 			}
 
 		} else {

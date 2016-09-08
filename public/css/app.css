@@ -1,0 +1,3 @@
+#entity tr:nth-of-type(even) {
+    background-color: transparent !important;
+}

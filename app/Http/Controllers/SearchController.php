@@ -42,7 +42,7 @@ class SearchController extends Controller
 		//$results = $this->searchRepo->bulk_insert();
 		
 		// Send request to db		
-		$results = $this->searchRepo->find($query);
+		$results = $this->searchRepo->fuzzy_find($query);
 
         return view('search', ['results' => $results, 'query' => $query]);
     }
