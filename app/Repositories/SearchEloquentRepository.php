@@ -4,15 +4,12 @@ namespace App\Repositories;
 
 use App\Repositories\SearchRepository;
 use DB;
+use App\sdnEntry;
 
 class SearchEloquentRepository implements SearchRepository
 {
     public function all()
     {
-/*
-        $ofac = DB::table('ofac')->get();
-
-        return view('search', ['ofac' => $ofac]);*/
         return DB::table('sdnentry')->get();
     }
 
@@ -27,8 +24,7 @@ class SearchEloquentRepository implements SearchRepository
 
    public function fuzzy_find($query)
     {
-
-		DB::enableQueryLog();
+		
 
 		$lastname = DB::table('sdnEntry')
 			->select('*', DB::raw('similarity("lastName", ?) As sim_score'))
@@ -89,24 +85,31 @@ class SearchEloquentRepository implements SearchRepository
             ->where('vesselInfo', '<>', $query)
             ->whereRaw('"vesselInfo" % ?', [$query,$query]);
 
-		$firstname = DB::table('sdnEntry')
-			->select('*', DB::raw('similarity("firstName", ?) As sim_score'))
-            ->where('firstName', '<>', $query)
-            ->whereRaw('"firstName" % ?', [$query,$query])
-			->union($lastname)
-			->union($title)
-			->union($sdnType)
-			->union($remarks)
-			//->union($programList)
-			->union($idList)
-			->union($akaList)
-			//->union($addressList)
-			//->union($nationalityList)
-			//->union($citizenshipList)
-			->union($vesselInfo)
-	 		->orderBy('sim_score', 'desc')
-			->limit(15)
-			->get();
+		try {
+
+			$firstname = DB::table('sdnEntry')
+				->select('*', DB::raw('similarity("firstName", ?) As sim_score'))
+		        ->where('firstName', '<>', $query)
+		        ->whereRaw('"firstName" % ?', [$query,$query])
+				->union($lastname)
+				->union($title)
+				->union($sdnType)
+				->union($remarks)
+				//->union($programList)
+				->union($idList)
+				->union($akaList)
+				//->union($addressList)
+				//->union($nationalityList)
+				//->union($citizenshipList)
+				->union($vesselInfo)
+		 		->orderBy('sim_score', 'desc')
+				->limit(15)
+				->get();
+		} catch (\Exception $e) {
+			\Log::error("Search failure with ".$query." ErrorMsg: ".$e->getMessage());
+			// Lets return no results instead of a server error so that it's not scary
+			return new \Illuminate\Database\Eloquent\Collection;
+    	}
 
         return $firstname;
     }
@@ -283,9 +286,15 @@ class SearchEloquentRepository implements SearchRepository
 
 				// Convert it into an array for Laravel
 				// For the sdnEntry table
-				DB::table('sdnEntry')->insert(
-					$cloned_array
-				);
+				try {
+
+					\App\sdnEntry::firstOrCreate($cloned_array);
+					/*DB::table('sdnEntry')->insert(
+						$cloned_array
+					);*/
+				} catch (\Exception $e) {
+					// \Log::error("SearchEloquentRepo->bulk_insert() ErrorMsg: ".$e->getMessage());
+				}
 
 				
 			}

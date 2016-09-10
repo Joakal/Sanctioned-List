@@ -27,7 +27,7 @@ interface SearchRepository
    public function fuzzy_find($query);
 
    /**
-    * A big script to read a XML, parse it then insert to DB
+    * A big script to read a XML file from USA OFAC, parse it then insert to DB
     *
     * @return \Illuminate\Database\Eloquent\Collection|null
     */
