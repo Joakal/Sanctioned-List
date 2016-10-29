@@ -32,4 +32,11 @@ interface SearchRepository
     * @return \Illuminate\Database\Eloquent\Collection|null
     */
    public function bulk_insert();
+
+   /**
+    * Returns the record.
+    *
+    * @return \Illuminate\Database\Eloquent\Collection|null
+    */
+   public function first($query);
 }

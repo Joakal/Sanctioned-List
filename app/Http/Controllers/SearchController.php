@@ -46,5 +46,16 @@ class SearchController extends Controller
 
         return view('search', ['results' => $results, 'query' => $query]);
     }
+
+    public function showDetail($query)
+    {
+		
+		// Send request to db		
+		$result = $this->searchRepo->first($query);
+		
+		if(!$result){\App::abort(404, 'Record not found');}
+
+        return view('detail', ['result' => $result, 'query' => $query]);
+    }
 	
 }

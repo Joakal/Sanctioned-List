@@ -293,7 +293,7 @@ class SearchEloquentRepository implements SearchRepository
 						$cloned_array
 					);*/
 				} catch (\Exception $e) {
-					// \Log::error("SearchEloquentRepo->bulk_insert() ErrorMsg: ".$e->getMessage());
+					\Log::error("SearchEloquentRepo->bulk_insert() ErrorMsg: ".$e->getMessage());
 				}
 
 				
@@ -305,4 +305,11 @@ class SearchEloquentRepository implements SearchRepository
 
 	} // end public function bulk_insert()
 
+   public function first($query)
+    {
+        return DB::table('sdnEntry')
+		->where('uid',$query)
+		->first();
+
+    }
 }

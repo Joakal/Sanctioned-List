@@ -21,3 +21,5 @@ Route::get('about', [
 
 Route::get('search/{query?}', 'SearchController@showIndex')->name('search.index');
 
+Route::get('detail/{query}', 'SearchController@showDetail')->name('search.detail');
+
