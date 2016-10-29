@@ -11,7 +11,6 @@
 </div>
 </div>
  
- 
 <div class="row">
  
 <div class="large-9 columns" role="content">

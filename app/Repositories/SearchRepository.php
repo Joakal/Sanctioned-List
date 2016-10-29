@@ -44,7 +44,7 @@ interface SearchRepository
     * Runs a PHP script on database to convert first name and last name into a url-friendly record and puts it in the url column.
 	* Note. To ensure record is unique, we add the UID as well.
     *
-    * @return \Illuminate\Database\Eloquent\Collection|null
+    * @return \Illuminate\Database\Eloquent\String
     */
    public function urlfriendly();
 }

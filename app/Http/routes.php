@@ -23,3 +23,5 @@ Route::get('search/{query?}', 'SearchController@showIndex')->name('search.index'
 
 Route::get('detail/{query}', 'SearchController@showDetail')->name('search.detail');
 
+Route::get('browse/{query?}', 'SearchController@showBrowse')->name('search.browse');
+

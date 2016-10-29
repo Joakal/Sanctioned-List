@@ -58,5 +58,20 @@ class SearchController extends Controller
 
         return view('detail', ['result' => $result, 'query' => $query]);
     }
+
+    public function showBrowse($query = 'A')
+    {
+		
+		// It must be one character for browsing.
+		if(strlen($query) != 1){\App::abort(404);}
+
+		// Send request to db		
+		$results = \App\sdnEntry::where('lastName','like', $query.'%')->paginate(15); 
+
+		if(!$results){\App::abort(404, 'Record not found');}
+
+
+        return view('browse', ['results' => $results, 'query' => $query]);
+    }
 	
 }
