@@ -55,6 +55,7 @@ class SearchController extends Controller
 		
 		if(!$result){\App::abort(404, 'Record not found');}
 
+
         return view('detail', ['result' => $result, 'query' => $query]);
     }
 	

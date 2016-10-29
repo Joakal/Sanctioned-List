@@ -307,9 +307,43 @@ class SearchEloquentRepository implements SearchRepository
 
    public function first($query)
     {
-        return DB::table('sdnEntry')
-		->where('uid',$query)
-		->first();
+		if(is_numeric($query)){
+		    return DB::table('sdnEntry')
+			->where('uid',$query)
+			->first();
+		}else{
+		    return DB::table('sdnEntry')
+			->where('url',$query)
+			->first();
+		}
+
+    }
+
+
+   public function urlfriendly()
+    {	
+		$results = DB::table('sdnEntry')->get();
+
+		foreach($results as $result)
+		{
+				
+			// Some entities don't have first name, so lets check that otherwise just encode the last name
+			if($result->firstName != NULL)
+			{
+				DB::table('sdnEntry')
+					->where('uid',$result->uid)
+				    ->update(['url' => urlencode($result->firstName.' '.$result->lastName.' '.$result->uid)]);
+			}else{
+				DB::table('sdnEntry')
+					->where('uid',$result->uid)
+				    ->update(['url' => urlencode($result->lastName.' '.$result->uid)]);
+
+
+			}
+		}
+		
+	
+		return "Successfully ran urlfriendly()";
 
     }
 }
