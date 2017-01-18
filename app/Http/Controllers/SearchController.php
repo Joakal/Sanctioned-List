@@ -53,7 +53,9 @@ class SearchController extends Controller
 		// Send request to db		
 		$result = $this->searchRepo->first($query);
 		
-		if(!$result){\App::abort(404, 'Record not found');}
+		if(!$result){
+			\App::abort(404, 'Record not found');
+		}
 
 
         return view('detail', ['result' => $result, 'query' => $query]);
@@ -63,12 +65,16 @@ class SearchController extends Controller
     {
 		
 		// It must be one character for browsing.
-		if(strlen($query) != 1){\App::abort(404);}
+		if(strlen($query) != 1){
+			\App::abort(404);
+		}
 
 		// Send request to db		
 		$results = \App\sdnEntry::where('lastName','like', $query.'%')->paginate(15); 
 
-		if(!$results){\App::abort(404, 'Record not found');}
+		if(!$results){
+			\App::abort(404, 'Record not found');
+		}
 
 
         return view('browse', ['results' => $results, 'query' => $query]);

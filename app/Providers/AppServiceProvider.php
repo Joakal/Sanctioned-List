@@ -18,14 +18,7 @@ class AppServiceProvider extends ServiceProvider
 	
 		// Abstracted common letters logic away from view
 		$letters = explode(" ","A B C D E F G H I J K L M N O P Q R S T U V W X Y Z");
-/*
-		$counter = 0;
-		foreach($letters as $letter)
-		{
-			$letters[0]->url = route('browse', ['letter' => $letter]);
-			$counter++;
-        
-		}*/
+
 
 		\View::share('letters', $letters);
 
