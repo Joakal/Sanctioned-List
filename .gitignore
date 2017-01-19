@@ -3,3 +3,4 @@
 .env.behat
 .env.dev
 .env.prod
+/extraenv/
